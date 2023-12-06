@@ -1,0 +1,179 @@
+{
+	"info": {
+		"_postman_id": "45740484-79f6-498b-a78b-cf1e1eb7e6ad",
+		"name": "Postman for FanAPI",
+		"description": "Aqui está uma API para o registro de informações de uma aplicação constituida por um ventilador e um sensor de temperatura, nos quais serão determinados o ON e OFF do ventilador.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29356071"
+	},
+	"item": [
+		{
+			"name": "Request for temperatures by sensor",
+			"item": [
+				{
+					"name": "GET TEMPERATURES",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/temperature/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"temperature",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST TEMPERATURE",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"temperature\": \"45.22\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/temperature/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"temperature",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET TEMPERATURE",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/temperature/1/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"temperature",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Request for Turn ON and OFF Fan",
+			"item": [
+				{
+					"name": "GET FANS",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/fan/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"fan",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST FAN",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"turnOn\": false\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/fan/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"fan",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET FAN",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/fan/1/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"fan",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
