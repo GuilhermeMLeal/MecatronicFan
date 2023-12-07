@@ -14,15 +14,16 @@ Para configurar o ambiente de desenvolvimento, siga estas etapas em seu CODER:
     ```
     cd codigo_projeto
     ```
-- Na pasta do arquivo:
-
-    ```
-    cd front-end
-    ```
 -   **Baixando dependências para rodar o React Native**
 
     ```
     npm install -g react-native
+    ```
+
+- Na pasta do arquivo:
+
+    ```
+    cd front-end
     ```
 
 -   **Baixando as dependências do React Native**
