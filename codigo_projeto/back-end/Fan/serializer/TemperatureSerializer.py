@@ -14,5 +14,7 @@ class TemperatureEntitySerializer(serializers.ModelSerializer):
         if temperature >= 28.00:
             fan = FanEntity.objects.create(turnOn=True, fan_temperature=temperature_entity)
             # Cria uma instância de FanEntity e associa à instância de TemperatureEntity
+        else:
+            fan = FanEntity.objects.create(turnOn=False, fan_temperature=temperature_entity)
 
         return temperature_entity
