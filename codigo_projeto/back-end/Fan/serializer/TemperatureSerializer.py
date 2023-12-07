@@ -12,7 +12,7 @@ class TemperatureEntitySerializer(serializers.ModelSerializer):
         temperature = validated_data['temperature']
 
         if temperature >= 28.00:
-            fan = FanEntity(turnOn=True)  # Cria uma instância de FanEntity
-            fan.save()  # Salva a instância de FanEntity no banco de dados
+            fan = FanEntity.objects.create(turnOn=True, fan_temperature=temperature_entity)
+            # Cria uma instância de FanEntity e associa à instância de TemperatureEntity
 
         return temperature_entity
