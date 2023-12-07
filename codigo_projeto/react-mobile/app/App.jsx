@@ -4,38 +4,55 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import Icon2 from "react-native-vector-icons/FontAwesome5";
 import axios from "axios";
 
-const API_URL = "https://Squad5.pythonanywhere.com/temperature";
-
 const App = () => {
-  const [fanData, setFanData] = useState({
-    data: [],
-    fanOnTime: 0,
-    fanStatus: false,
-  });
-  const [loading, setLoading] = useState(false);
-
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      const response = await axios.get(API_URL);
-      setFanData(response.data);
-    } catch (error) {
-      console.error("Erro ao buscar dados:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [fanData, setFanData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [fanRunningTime, setFanRunningTime] = useState(0);
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("http://10.109.25.56:8000/temperature/");
+        setFanData(response.data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setLoading(false);
+      }
+    };
+
+    // Fetch initial data
     fetchData();
-
-    const intervalId = setInterval(() => {
-      fetchData();
-    }, 5000);
-
-    return () => clearInterval(intervalId);
-
   }, []);
+
+  // Mapeia os dados para extrair a temperatura
+  const temperatures = fanData.map(item => item.temperature);
+
+  // Novo useEffect para calcular o tempo de funcionamento
+  useEffect(() => {
+    // Verifica se há dados e se o ventilador está ligado
+    if (fanData.length > 0 && fanData[0].fanStatus) {
+      console.log(fanData)
+      // Encontra o índice do primeiro TurnOn
+      const turnOnIndex = fanData.findIndex(item => item.event === "TurnOn");
+
+      if (turnOnIndex !== -1) {
+        // Filtra os eventos após o primeiro TurnOn até o próximo TurnOff
+        const eventsAfterTurnOn = fanData.slice(turnOnIndex).filter(item => item.event !== "TurnOn");
+
+        // Encontra o índice do próximo TurnOff
+        const turnOffIndex = eventsAfterTurnOn.findIndex(item => item.event === "TurnOff");
+
+        if (turnOffIndex !== -1) {
+          // Calcula o tempo decorrido entre TurnOn e TurnOff em minutos
+          const elapsedTimeMinutes = (eventsAfterTurnOn[turnOffIndex].timestamp - fanData[turnOnIndex].timestamp) / (1000 * 60);
+          setFanRunningTime(elapsedTimeMinutes);
+        }
+      }
+    }
+  }, [fanData]);
+
+  console.log(fanRunningTime)
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -49,7 +66,9 @@ const App = () => {
             <View style={styles.timeContainer}>
               <Icon name="access-time" size={60} color="#000" style={styles.timeImg} />
               <Text style={styles.timeTitle}>Horas Ligadas</Text>
-              <Text style={styles.timeText}>{fanData.fanOnTime ? fanData.fanOnTime.toFixed(2) : "0.00"} Horas</Text>
+              <Text style={styles.timeText}>
+                {fanRunningTime.toFixed(2)} Horas
+              </Text>
             </View>
           </View>
 
@@ -57,22 +76,24 @@ const App = () => {
             <View style={styles.temperatureContainer}>
               <Icon2 name="temperature-low" size={55} color="#000" style={styles.temperatureImg} />
               <Text style={styles.temperatureTitle}>Temperatura Atual</Text>
+              {/* Mostra a última temperatura disponível */}
               <Text style={styles.temperatureText}>
-                {fanData.data && fanData.data.length > 0 ? fanData.data[0].value.toFixed(2) : "-"} °C
+                {temperatures.length > 0 ? temperatures[temperatures.length - 1] : "N/A"}
               </Text>
             </View>
           </View>
 
           <View style={styles.blockContainer}>
             <View style={styles.statusContainer}>
-              <Icon
-                style={styles.statusImg}
-                name={fanData.fanStatus ? "power" : "power-off"}
-                size={60}
-                color={fanData.fanStatus ? "#000" : "#000"}
-              />
+              <Icon style={styles.statusImg} name="power" size={60} color="#000" />
               <Text style={styles.statusTitle}>Status</Text>
-              <Text style={styles.statusText}>{fanData.fanStatus ? "Ligado" : "Desligado"}</Text>
+              <Text style={styles.statusText}>
+                {fanData.length > 0
+                  ? fanData[0].fanStatus
+                    ? "Ligado"
+                    : "Desligado"
+                  : "N/A"}
+              </Text>
             </View>
           </View>
         </View>

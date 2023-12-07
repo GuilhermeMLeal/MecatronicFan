@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-@b@_t!ji-1!h%1hda_#uwbwn5lew25nlc_modnuc48jkgqb5qz
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*", "10.109.25.56"]
 
 
 # Application definition
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'Fan',
     'rest_framework',
     'drf_yasg',
@@ -50,6 +51,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'setup.urls'
@@ -72,6 +74,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'setup.wsgi.application'
 
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:19006",  # Atualize com a origem do seu aplicativo React Native
+]
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
