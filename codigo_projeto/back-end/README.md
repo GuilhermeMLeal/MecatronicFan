@@ -2,6 +2,10 @@
 
 Esta aplicação Django é um exemplo de integração com a FanAPI, uma API que gerencia informações de um ventilador e um sensor de temperatura. Ela está em conjunto com a turma de Mecatrônica e é representada pela matéria de IoT.
 
+# ☁️ Url's para Teste/Uso
+- https://squad5.pythonanywhere.com/ (Pythonanywhere)
+- https://squad5.pythonanywhere.com/temperature/ (End'Point para JSON)
+
 ## Instalação
 
 1. Clone o repositório:
