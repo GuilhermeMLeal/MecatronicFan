@@ -1,6 +1,3 @@
-
-
-
 # Aplicação Django para FanAPI
 
 Esta aplicação Django é um exemplo de integração com a FanAPI, uma API que gerencia informações de um ventilador e um sensor de temperatura. Ela está em conjunto com a turma de Mecatrônica e é representada pela matéria de IoT.
