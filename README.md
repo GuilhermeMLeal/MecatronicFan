@@ -2,6 +2,9 @@
 Projetos dos Alunos de ADS juntamente aos alunos de Mecatrônica - Máteria IOT
 ### O aplicativo voltado ao projeto de controle de temperatura pelo ventilador utilizará uma interface mobile. Na página principal, o usuário terá acesso às principais funcionalidades, exibindo o status de funcionamento (ligado ou desligado), o gerenciamento do tempo de utilização e o controle da temperatura.
 
+# ☁️ Url's para Teste/Uso
+- https://squad5.pythonanywhere.com/ (Pythonanywhere)
+- https://squad5.pythonanywhere.com/temperature/ (End'Point para JSON)
 
 # 📖 Código e API
 
