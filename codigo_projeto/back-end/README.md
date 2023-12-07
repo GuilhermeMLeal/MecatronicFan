@@ -4,7 +4,7 @@ Esta aplicação Django é um exemplo de integração com a FanAPI, uma API que 
 
 # ☁️ Url's para Teste/Uso
 - https://squad05.pythonanywhere.com/ (Pythonanywhere)
-- https://squad05.pythonanywhere.com/espinfo/ (End'Point para JSON)
+- https://squad05.pythonanywhere.com/temperature/ (End'Point para JSON)
 
 ## Instalação
 
