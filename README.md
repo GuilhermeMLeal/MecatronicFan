@@ -43,7 +43,35 @@ Para configurar o ambiente de desenvolvimento, siga estas etapas em seu CODER:
 ![App Screenshot](https://is1-ssl.mzstatic.com/image/thumb/Purple126/v4/2e/34/d1/2e34d152-0f11-064d-5dc2-a762f8e24b70/AppIcon-1x_U007emarketing-0-7-0-85-220.png/1200x630wa.png)
 Apenas aponte seu celular para o QRcode, e automaticamente o aplicativo buildará a versão atual. 
 
+## Para rodar a API(Django) localmente é necessário:
+- Na pasta do arquivo:
 
+    ```
+    cd Backend
+    ```
+
+-   **Crie um ambiente virtual:**
+
+    ```
+    python -m venv .env 
+    ```
+
+- Utilize o seguinte comando:
+
+    ```
+    .env\Scripts\activate
+    ```
+
+-  Logo Após, utilize:
+
+    ```
+    pip install -r requirements.txt
+    ```
+
+- **Rode Local**
+    ```
+    python manage.py runserver
+    ```
 
 ## 📄 Documentação da API
 
