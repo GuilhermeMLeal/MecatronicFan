@@ -6,15 +6,45 @@ import axios from "axios";
 
 const App = () => {
   const [fanData, setFanData] = useState([]);
+  const [temperatureData, setTemperatureData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [fanRunningTime, setFanRunningTime] = useState(0);
+  const [fanStatus, setFanStatus] = useState("Desligado"); // Inicialmente, consideramos como desligado
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://10.109.25.56:8000/temperature/");
-        setFanData(response.data);
+        const [fanResponse, temperatureResponse] = await Promise.all([
+          axios.get("http://172.29.176.1:8000/fan/"),
+          axios.get("http://172.29.176.1:8000/temperature/")
+        ]);
+
+        console.log("Fan Response:", fanResponse.data);
+        console.log("Temperature Response:", temperatureResponse.data);
+
+        setFanData(fanResponse.data);
+        setTemperatureData(temperatureResponse.data);
         setLoading(false);
+
+        const latestFanData = fanResponse.data.length > 0 ? fanResponse.data[fanResponse.data.length - 1] : null;
+        
+        // Ajusta a lógica para interpretar true como "Ligado" e false como "Desligado"
+        setFanStatus(latestFanData && latestFanData.turnOn ? "Ligado" : "Desligado");
+
+        if (fanResponse.data.length > 0 && latestFanData.turnOn !== undefined) {
+          const turnOnIndex = fanResponse.data.findIndex(item => item.event === "TurnOn");
+
+          if (turnOnIndex !== -1) {
+            const eventsAfterTurnOn = fanResponse.data.slice(turnOnIndex).filter(item => item.event !== "TurnOn");
+
+            const turnOffIndex = eventsAfterTurnOn.findIndex(item => item.event === "TurnOff");
+
+            if (turnOffIndex !== -1) {
+              const elapsedTimeMinutes = (eventsAfterTurnOn[turnOffIndex].timestamp - fanResponse.data[turnOnIndex].timestamp) / (1000 * 60);
+              setFanRunningTime(elapsedTimeMinutes);
+            }
+          }
+        }
       } catch (error) {
         console.error("Error fetching data:", error);
         setLoading(false);
@@ -26,33 +56,7 @@ const App = () => {
   }, []);
 
   // Mapeia os dados para extrair a temperatura
-  const temperatures = fanData.map(item => item.temperature);
-
-  // Novo useEffect para calcular o tempo de funcionamento
-  useEffect(() => {
-    // Verifica se há dados e se o ventilador está ligado
-    if (fanData.length > 0 && fanData[0].fanStatus) {
-      console.log(fanData)
-      // Encontra o índice do primeiro TurnOn
-      const turnOnIndex = fanData.findIndex(item => item.event === "TurnOn");
-
-      if (turnOnIndex !== -1) {
-        // Filtra os eventos após o primeiro TurnOn até o próximo TurnOff
-        const eventsAfterTurnOn = fanData.slice(turnOnIndex).filter(item => item.event !== "TurnOn");
-
-        // Encontra o índice do próximo TurnOff
-        const turnOffIndex = eventsAfterTurnOn.findIndex(item => item.event === "TurnOff");
-
-        if (turnOffIndex !== -1) {
-          // Calcula o tempo decorrido entre TurnOn e TurnOff em minutos
-          const elapsedTimeMinutes = (eventsAfterTurnOn[turnOffIndex].timestamp - fanData[turnOnIndex].timestamp) / (1000 * 60);
-          setFanRunningTime(elapsedTimeMinutes);
-        }
-      }
-    }
-  }, [fanData]);
-
-  console.log(fanRunningTime)
+  const temperatures = temperatureData.map(item => item.temperature);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -87,13 +91,8 @@ const App = () => {
             <View style={styles.statusContainer}>
               <Icon style={styles.statusImg} name="power" size={60} color="#000" />
               <Text style={styles.statusTitle}>Status</Text>
-              <Text style={styles.statusText}>
-                {fanData.length > 0
-                  ? fanData[0].fanStatus
-                    ? "Ligado"
-                    : "Desligado"
-                  : "N/A"}
-              </Text>
+              {/* Mostra o status diretamente do estado */}
+              <Text style={styles.statusText}>{fanStatus}</Text>
             </View>
           </View>
         </View>
@@ -109,7 +108,7 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
   },
   blockContainer: {
-    width: "45%", // Ajuste conforme necessário
+    width: "45%",
     marginBottom: 20,
   },
   container: {
