@@ -194,5 +194,5 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 });
-
+//error
 export default App;
