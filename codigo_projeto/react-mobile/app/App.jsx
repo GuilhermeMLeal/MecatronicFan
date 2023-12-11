@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, ActivityIndicator, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+  ScrollView,
+} from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Icon2 from "react-native-vector-icons/FontAwesome5";
 import axios from "axios";
@@ -15,8 +21,8 @@ const App = () => {
     const fetchData = async () => {
       try {
         const [fanResponse, temperatureResponse] = await Promise.all([
-          axios.get("http://172.29.176.1:8000/fan/"),
-          axios.get("http://172.29.176.1:8000/temperature/")
+          axios.get("https://squad5.pythonanywhere.com/fan/"),
+          axios.get("https://squad5.pythonanywhere.com/temperature/"),
         ]);
 
         console.log("Fan Response:", fanResponse.data);
@@ -26,21 +32,35 @@ const App = () => {
         setTemperatureData(temperatureResponse.data);
         setLoading(false);
 
-        const latestFanData = fanResponse.data.length > 0 ? fanResponse.data[fanResponse.data.length - 1] : null;
-        
+        const latestFanData =
+          fanResponse.data.length > 0
+            ? fanResponse.data[fanResponse.data.length - 1]
+            : null;
+
         // Ajusta a lógica para interpretar true como "Ligado" e false como "Desligado"
-        setFanStatus(latestFanData && latestFanData.turnOn ? "Ligado" : "Desligado");
+        setFanStatus(
+          latestFanData && latestFanData.turnOn ? "Ligado" : "Desligado"
+        );
 
         if (fanResponse.data.length > 0 && latestFanData.turnOn !== undefined) {
-          const turnOnIndex = fanResponse.data.findIndex(item => item.event === "TurnOn");
+          const turnOnIndex = fanResponse.data.findIndex(
+            (item) => item.event === "TurnOn"
+          );
 
           if (turnOnIndex !== -1) {
-            const eventsAfterTurnOn = fanResponse.data.slice(turnOnIndex).filter(item => item.event !== "TurnOn");
+            const eventsAfterTurnOn = fanResponse.data
+              .slice(turnOnIndex)
+              .filter((item) => item.event !== "TurnOn");
 
-            const turnOffIndex = eventsAfterTurnOn.findIndex(item => item.event === "TurnOff");
+            const turnOffIndex = eventsAfterTurnOn.findIndex(
+              (item) => item.event === "TurnOff"
+            );
 
             if (turnOffIndex !== -1) {
-              const elapsedTimeMinutes = (eventsAfterTurnOn[turnOffIndex].timestamp - fanResponse.data[turnOnIndex].timestamp) / (1000 * 60);
+              const elapsedTimeMinutes =
+                (eventsAfterTurnOn[turnOffIndex].timestamp -
+                  fanResponse.data[turnOnIndex].timestamp) /
+                (1000 * 60);
               setFanRunningTime(elapsedTimeMinutes);
             }
           }
@@ -53,10 +73,18 @@ const App = () => {
 
     // Fetch initial data
     fetchData();
+
+    // Configura o polling a cada 3 segundos
+    const pollingInterval = setInterval(() => {
+      fetchData();
+    }, 3000);
+
+    // Limpando o intervalo quando o componente é desmontado
+    return () => clearInterval(pollingInterval);
   }, []);
 
   // Mapeia os dados para extrair a temperatura
-  const temperatures = temperatureData.map(item => item.temperature);
+  const temperatures = temperatureData.map((item) => item.temperature);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -68,7 +96,12 @@ const App = () => {
         <View style={styles.bigContainer}>
           <View style={styles.blockContainer}>
             <View style={styles.timeContainer}>
-              <Icon name="access-time" size={60} color="#000" style={styles.timeImg} />
+              <Icon
+                name="access-time"
+                size={60}
+                color="#000"
+                style={styles.timeImg}
+              />
               <Text style={styles.timeTitle}>Horas Ligadas</Text>
               <Text style={styles.timeText}>
                 {fanRunningTime.toFixed(2)} Horas
@@ -78,18 +111,30 @@ const App = () => {
 
           <View style={styles.blockContainer}>
             <View style={styles.temperatureContainer}>
-              <Icon2 name="temperature-low" size={55} color="#000" style={styles.temperatureImg} />
+              <Icon2
+                name="temperature-low"
+                size={55}
+                color="#000"
+                style={styles.temperatureImg}
+              />
               <Text style={styles.temperatureTitle}>Temperatura Atual</Text>
               {/* Mostra a última temperatura disponível */}
               <Text style={styles.temperatureText}>
-                {temperatures.length > 0 ? temperatures[temperatures.length - 1] : "N/A"}
+                {temperatures.length > 0
+                  ? temperatures[temperatures.length - 1]
+                  : "N/A"}
               </Text>
             </View>
           </View>
 
           <View style={styles.blockContainer}>
             <View style={styles.statusContainer}>
-              <Icon style={styles.statusImg} name="power" size={60} color="#000" />
+              <Icon
+                style={styles.statusImg}
+                name="power"
+                size={60}
+                color="#000"
+              />
               <Text style={styles.statusTitle}>Status</Text>
               {/* Mostra o status diretamente do estado */}
               <Text style={styles.statusText}>{fanStatus}</Text>
@@ -194,5 +239,5 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 });
-//error
+
 export default App;
