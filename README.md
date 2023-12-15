@@ -6,6 +6,9 @@ Projetos dos Alunos de ADS juntamente aos alunos de Mecatrônica - Máteria IOT
 - https://squad5.pythonanywhere.com/ (Pythonanywhere)
 - https://squad5.pythonanywhere.com/temperature/ (End'Point para JSON)
 
+# 📼 Vídeo do Projeto integrado
+- https://drive.google.com/file/d/1FZATrz98-oCX-eva6knn-2TyZibUf4zf/view?usp=sharing
+
 # 📖 Código e API
 
 ## ⚙️ Instruções - Projeto Local
